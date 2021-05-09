@@ -1,17 +1,30 @@
 import tkinter as tk
+import time as time
+#using the stopwatch from tkinter
 
 class Application(tk.frame):
+    
+    #Variables
+    
+    
+    #launching the application
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.pack()
-        self.create_widgets()
+        self.createStartWidgets()
     
-    def create_widgets(self):
+    def createStartWidgets(self):
+        self.Breeze = tk.button(self, text="Breeze")
+
+        #exit application button
+        self.exit = tk.Button(self, text="Exit", fg="red", command=self.master.destroy)
 
 ##########################
 # Guide Application Code #
 ##########################
+
+#https://docs.python.org/3/library/tkinter.html
 
 #class Application(tk.Frame):
 #    def __init__(self, master=None):
