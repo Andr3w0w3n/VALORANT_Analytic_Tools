@@ -2,6 +2,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 	private bool control = c;
 	private double controlValue = 0.0;
 	private int edgeCase = edge;
+
 	
 	public onStart(){
 		if(control) 
@@ -17,6 +18,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 			
 			switch(edgeCase){
 				
+				//center square
 				case 1:
 					if(left.getControlValue() < lowestValue){
 						lowestValue = left.getControlValue();
@@ -35,6 +37,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 						min = 2;
 					}
 					
+				//left edge
 				case 2:
 					if(right.getControlValue() < lowestValue){
 						lowestValue = right.getControlValue();
@@ -49,6 +52,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 						min = 2;
 					}
 					
+				//right edge
 				case 3:
 					if(left.getControlValue() < lowestValue){
 						lowestValue = right.getControlValue();
@@ -60,6 +64,94 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 					}
 					if(bottom.getControlValue() < lowestValue){
 						lowestValue = bottom.getControlValue();
+						min = 2;
+					}
+
+				//top edge
+				case 4:
+					if (left.getControlValue() < lowestValue)
+					{
+						lowestValue = left.getControlValue();
+						min = 2;
+					}
+					if (right.getControlValue() < lowestValue)
+					{
+						lowestValue = right.getControlValue();
+						min = 2;
+					}
+					if (bottom.getControlValue() < lowestValue)
+					{
+						lowestValue = bottom.getControlValue();
+						min = 2;
+					}
+				
+				//bottom edge
+				case 5:
+					if (left.getControlValue() < lowestValue)
+					{
+						lowestValue = left.getControlValue();
+						min = 2;
+					}
+					if (right.getControlValue() < lowestValue)
+					{
+						lowestValue = right.getControlValue();
+						min = 2;
+					}
+					if (top.getControlValue() < lowestValue)
+					{
+						lowestValue = top.getControlValue();
+						min = 2;
+					}
+
+				//top left corner
+				case 6:
+					if (right.getControlValue() < lowestValue)
+					{
+						lowestValue = right.getControlValue();
+						min = 2;
+					}
+					if (bottom.getControlValue() < lowestValue)
+					{
+						lowestValue = bottom.getControlValue();
+						min = 2;
+					}
+
+				//top right corner
+				case 7:
+					if (left.getControlValue() < lowestValue)
+					{
+						lowestValue = right.getControlValue();
+						min = 2;
+					}
+					if (bottom.getControlValue() < lowestValue)
+					{
+						lowestValue = bottom.getControlValue();
+						min = 2;
+					}
+
+				//bottom left corner
+				case 8:
+					if (right.getControlValue() < lowestValue)
+					{
+						lowestValue = right.getControlValue();
+						min = 2;
+					}
+					if (top.getControlValue() < lowestValue)
+					{
+						lowestValue = top.getControlValue();
+						min = 2;
+					}
+
+				//bottom right corner
+				case 8:
+					if (left.getControlValue() < lowestValue)
+					{
+						lowestValue = left.getControlValue();
+						min = 2;
+					}
+					if (top.getControlValue() < lowestValue)
+					{
+						lowestValue = top.getControlValue();
 						min = 2;
 					}
 			}
@@ -87,7 +179,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 		}
 	}
 	
-	public setControl(bool con){
+	public void setControl(bool con){
 		control = con;
 		if(control)
 			controlValue = 100.0;
@@ -97,7 +189,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 		return controlValue;
 	}
 	
-	public boolean getControl(){
+	public bool getControl(){
 		return control;
 	}
 	
@@ -123,7 +215,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 
 /*
 - Frame by frame looking and changing tiles
-- Create arrays of the map objects that have been 100% controlled by the enemy
+- Create arrays of the map objects that have been 100% controlled by the player, 0% is complete enemy control
 	- Hash these into array? Use position value for hash function
 
 
