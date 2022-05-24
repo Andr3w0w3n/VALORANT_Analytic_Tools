@@ -2,7 +2,7 @@ public class PositionNode(bool c, int edge, PositionNode left, PositionNode righ
 	private bool control = c;
 	private double controlValue = 0.0;
 	private int edgeCase = edge;
-
+	private static Timer timer;
 	
 	public onStart(){
 		if(control) 
