@@ -102,7 +102,8 @@ void Tile(int cNo, int xOne, int xTwo, int yOne, int yTwo, double tValue){
 	int x1 = xOne;
 	int x2 = xTwo;
 	int y1 = yOne;
-	int y2 = yTwo;	
+	int y2 = yTwo;
+	//value is the total control of the tile
 	double tileValue = tValue;
 
 	
