@@ -17,7 +17,7 @@ Mat findingFogPixels(Mat image) {
 	//non-site FOW
 	Mat matte;
 	Scalar upBound = Scalar(255,255,255);
-	Scalar lowBound = Scalar(60, 60, 60);
+	Scalar lowBound = Scalar(40, 40, 40);
 	inRange(image, lowBound, upBound, matte);
 	return matte;
 
@@ -62,15 +62,22 @@ int main() {
 		//finding pixel positions
 		// input, binary image
 		Mat locations;   // output, locations of non-zero pixels
-		findNonZero(mattedImage, locations);
+		//findNonZero(mattedImage, locations);
 		// access pixel coordinates
-		Point pnt = locations.at<Point>(0);
+		//Point pnt = locations.at<Point>(0);
 		//cout << pnt << endl;
+
+		Mat imgCanny;
+		Canny(imgCont, imgCanny, 50, 200);
 
 		imshow("Image Contrasted & Brighted", imgCont);
 		//imshow("Image Brighted", imgBright);
 		imshow("Imaged Matted", mattedImage);
 		imshow("Origional Image (Cropped)", cropped_image);
+		imshow("Edge Detection", imgCanny);
+
+
+		
 		waitKey(1);
 	}
 	return 0;
