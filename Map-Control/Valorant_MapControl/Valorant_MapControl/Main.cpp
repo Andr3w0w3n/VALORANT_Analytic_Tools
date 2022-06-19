@@ -7,6 +7,24 @@
 using namespace std;
 using namespace cv;
 
+Mat findingFogPixels(Mat image) {
+	//this returns a matte of just the fog of war pixels
+
+	//screengrabbed values (over discord and screengrabbed)
+	//General: Red: 94, Green: 91, Blue: 93
+	//Site: Red: 110, Green: 114, Blue: 68
+
+	//non-site FOW
+	Mat matte;
+	Scalar upBound = Scalar(110,110,110);
+	Scalar lowBound = Scalar(60, 60, 60);
+	inRange(image, lowBound, upBound, matte);
+	return matte;
+
+	///////////////TO-DO///////////////
+	//Need to add a site recognition FOW and need to add a blank map to do a "Subraction" of unwanted pixels
+
+}
 
 int main() {
 
@@ -31,17 +49,29 @@ int main() {
 		
 		//attempted splitting the image into RGB to modify but found I could just adjust the brightness and contrast and get a similar result
 		//Mat rgbchannel[3];
+		
+		//lowering the brightness and then raising the contrast 
+		imgBright = cropped_image - Scalar(125, 125, 125); //changing brightness, lowering
+		imgBright.convertTo(imgCont, -1, 1.75, 0); //chaning contrast, raising
 
-		cropped_image.convertTo(imgCont, 1, -2, 0);//changing contrast
-		imgBright = imgCont - Scalar(80, 80, 80);//changing brightness
+
+		Mat mattedImage = findingFogPixels(imgCont);
 
 
-		//imshow("Image", img);
-		//imshow("Image Canny", imgCanny);
-		imshow("Image Contrasted", imgCont);
-		imshow("Image Brighted & Constrasted", imgBright);
+		//finding pixel positions
+		// input, binary image
+		Mat locations;   // output, locations of non-zero pixels
+		findNonZero(mattedImage, locations);
+		// access pixel coordinates
+		Point pnt = locations.at<Point>(0);
+		cout << pnt << endl;
+
+		imshow("Image Contrasted & Brighted", imgCont);
+		//imshow("Image Brighted", imgBright);
+		imshow("Imaged Matted", mattedImage);
+		imshow("Origional Image (Cropped)", cropped_image);
 		waitKey(1);
 	}
-	destroyAllWindows();
 	return 0;
+
 }
