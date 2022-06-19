@@ -16,7 +16,7 @@ Mat findingFogPixels(Mat image) {
 
 	//non-site FOW
 	Mat matte;
-	Scalar upBound = Scalar(110,110,110);
+	Scalar upBound = Scalar(255,255,255);
 	Scalar lowBound = Scalar(60, 60, 60);
 	inRange(image, lowBound, upBound, matte);
 	return matte;
@@ -28,7 +28,8 @@ Mat findingFogPixels(Mat image) {
 
 int main() {
 
-	string path = "C:\\Users\\epica\\Videos\\LagClip.mp4";
+	//string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-15-47.mp4"; //Test run through ascent
+	string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
 
 	VideoCapture cap(path);
 	Mat img;
@@ -41,7 +42,7 @@ int main() {
 		//Canny(img, imgCanny, 50, 150);
 		
 		//cropped image is (y_Range, x_Range)
-		Mat cropped_image = img(Range(70, 430), Range(80, 430));
+		Mat cropped_image = img(Range(80, 460), Range(60, 420));
 		
 		
 		//messing with the colors a bit
@@ -64,7 +65,7 @@ int main() {
 		findNonZero(mattedImage, locations);
 		// access pixel coordinates
 		Point pnt = locations.at<Point>(0);
-		cout << pnt << endl;
+		//cout << pnt << endl;
 
 		imshow("Image Contrasted & Brighted", imgCont);
 		//imshow("Image Brighted", imgBright);
@@ -75,3 +76,34 @@ int main() {
 	return 0;
 
 }
+
+/*int main() {
+
+	string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
+
+	VideoCapture cap(path);
+	Mat img;
+	Mat imgCont, imgBright;
+
+
+	Mat cropped_image = img(Range(80, 460), Range(60, 420));
+
+	imgBright = cropped_image - Scalar(125, 125, 125); //changing brightness, lowering
+	imgBright.convertTo(imgCont, -1, 1.75, 0); //chaning contrast, raising
+
+	Mat matte;
+	Scalar upBound = Scalar(110, 110, 110);
+	Scalar lowBound = Scalar(60, 60, 60);
+	inRange(imgCont, lowBound, upBound, matte);
+
+	namedWindow("Image Matted", WINDOW_AUTOSIZE);
+	namedWindow("Origional Image (Cropped)", WINDOW_AUTOSIZE);
+
+	imshow("Image Matted", matte);
+	imshow("Origional Image (Cropped)", cropped_image);
+
+	imwrite("E:\\Users\\epica\\OneDrive\\Documents\\Valorant\\VALORANT_Analytic_Tools\Map-Control\\Valorant_MapControl\\PhotosMattedMapImage_Ascent.jpg", matte);
+
+	return 0;
+
+}*/
