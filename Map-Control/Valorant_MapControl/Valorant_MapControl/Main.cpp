@@ -83,34 +83,3 @@ int main() {
 	return 0;
 
 }
-
-/*int main() {
-
-	string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
-
-	VideoCapture cap(path);
-	Mat img;
-	Mat imgCont, imgBright;
-
-
-	Mat cropped_image = img(Range(80, 460), Range(60, 420));
-
-	imgBright = cropped_image - Scalar(125, 125, 125); //changing brightness, lowering
-	imgBright.convertTo(imgCont, -1, 1.75, 0); //chaning contrast, raising
-
-	Mat matte;
-	Scalar upBound = Scalar(110, 110, 110);
-	Scalar lowBound = Scalar(60, 60, 60);
-	inRange(imgCont, lowBound, upBound, matte);
-
-	namedWindow("Image Matted", WINDOW_AUTOSIZE);
-	namedWindow("Origional Image (Cropped)", WINDOW_AUTOSIZE);
-
-	imshow("Image Matted", matte);
-	imshow("Origional Image (Cropped)", cropped_image);
-
-	imwrite("E:\\Users\\epica\\OneDrive\\Documents\\Valorant\\VALORANT_Analytic_Tools\Map-Control\\Valorant_MapControl\\PhotosMattedMapImage_Ascent.jpg", matte);
-
-	return 0;
-
-}*/
