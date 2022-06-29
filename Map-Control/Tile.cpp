@@ -34,7 +34,7 @@ public class Tile{
 		}
 		
 		void updateCon(){
-			
+			//this is where the control percentage will be updated
 		}
 		
 	private:
