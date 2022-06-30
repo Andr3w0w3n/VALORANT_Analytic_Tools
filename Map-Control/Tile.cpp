@@ -33,6 +33,14 @@ public class Tile{
 			return new Point(x, y);
 		}
 		
+		void beginLosingControl(){
+			losingCon = true;
+		}
+		
+		void pauseLosingControl(){
+			losingCon = false;
+		}
+		
 		void updateCon(){
 			//this is where the control percentage will be updated
 		}
