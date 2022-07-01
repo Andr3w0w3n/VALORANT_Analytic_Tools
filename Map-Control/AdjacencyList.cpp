@@ -39,7 +39,7 @@ void updateConTiles(list<int> adj[], Tile tiles[]){
 			do{
 				if(object == adj[i].end()){
 					end = true;
-				}if(tiles[object].getControl() < 100.0){
+				}if(tiles[object].getControl() < tiles[i].getControl()){
 					found = true;
 				}else if(!end){
 					object++;
@@ -57,37 +57,51 @@ void updateConTiles(list<int> adj[], Tile tiles[]){
 	}
 }
 
+bool checkXY(int x, int y){
+	
+	
+	
+}
+
+int insertSurroundingNum(int x, int y, int size, int itt){
+	switch(itt){
+		case 1: 
+			if((x-1 != -1) && (y-1 != -1)){
+				
+			}
+}
+
 int main(){
 	
-	int size;
-	private int tileNum = size * size;
-	private int x = 0;
-	private int y = 0;
+	const int size = 50;
+	const int tileNum = size * size;
+	int x = 0;
+	int y = 0;
 	Tile tiles[tileNum];
-	
+
 	list<int> adj[tileNum];
-	
+
 	//this creates the entire grid of tiles and puts them in a linear array
 	//currently this is very rough and includes tiles that will not be used
-	for(int i = 0; i < tileNum; i++){
-		tiles[tileNum] = new Tile(x, y, true);
-		if(x<size){
+	for (int i = 0; i < tileNum; i++) {
+		checkXY(x, y);
+		tiles[i] = new Tile(x, y, true);
+		for(int j = 1; j <= 9; j++){
+			int val = insertSurroundingNum(x, y, j);
+			if(val == -1){
+				
+			}
+			adj[i].insert();
+		}
+		
+		if (x < size) {
 			x++;
 		}else{
 			y++;
 			x = 0;
 		}
 	}
-	
-	//probably should not do a 2d array due to some of the tiles being deleted, it may be more effecient (space and time) to use a single array\
-	// especially with the deletion.
-	//Tile tiles[tileNum/2][tileNum/2];
-	
-	/*for(int i = 0; i < tileNum/2; i++){
-		for(int j = 0; j < tileNum/2; j++){
-			tiles[j][i] = new Tile(j, i, true);
-		}
-	}*/
+
 	
 	return 0;
 }
