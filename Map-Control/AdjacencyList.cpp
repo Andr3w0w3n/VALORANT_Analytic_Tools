@@ -64,11 +64,59 @@ bool checkXY(int x, int y){
 }
 
 int insertSurroundingNum(int x, int y, int size, int itt){
+	
+	//itt will be the value of whatever is passed through, as to itterate over the 9
+	// potentially surrounding objects. This should help setup a default adjacency list
+	// without the out of map points.
 	switch(itt){
+		//top left
 		case 1: 
 			if((x-1 != -1) && (y-1 != -1)){
-				
+				return size*(y-1) + (x-1);
 			}
+		
+		//top mid
+		case 2: 
+			if(y-1 != -1){
+				return size*(y-1) + (x);
+			}
+		
+		//top right
+		case 3: 
+			if((x+1 != size) && (y-1 != -1)){
+				return size*(y-1) + (x+1);
+			}
+			
+		//left
+		case 4: 
+			if((x-1 != -1)){
+				return size*(y) + (x-1);
+			}
+		
+		//right
+		case 5: 
+			if((x+1 != size)){
+				return size*(y) + (x+1);
+			}
+			
+		//bottom left
+		case 6: 
+			if((x-1 != -1) && (y+1 != size)){
+				return size*(y+1) + (x-1);
+			}
+			
+		//bottom mid
+		case 7: 
+			if(y+1 != size){
+				return size*(y+1) + (x);
+			}
+			
+		//bottom right
+		case 8: 
+			if((x+1 != size) && (y+1 != size)){
+				return size*(y+1) + (x+1);
+			}
+	return -1;
 }
 
 int main(){
