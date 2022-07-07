@@ -57,6 +57,8 @@ void updateConTiles(list<int> adj[], Tile tiles[]){
 	}
 }
 
+//I forgot what I wanted this to do, maybe check to see if x,y is valid?
+// This will have to be repeated for any of the adjacency checks
 bool checkXY(int x, int y){
 	
 	
@@ -134,7 +136,7 @@ int main(){
 	for (int i = 0; i < tileNum; i++) {
 		checkXY(x, y);
 		tiles[i] = new Tile(x, y, true);
-		for(int j = 1; j <= 9; j++){
+		for(int j = 1; j <= 8; j++){
 			int val = insertSurroundingNum(x, y, j);
 			if(val == -1){
 				
