@@ -65,7 +65,7 @@ bool checkXY(int x, int y){
 	
 }
 
-int insertSurroundingNum(int x, int y, int size, int itt){
+std::integer insertSurroundingNum(int x, int y, int size, int itt){
 	
 	//itt will be the value of whatever is passed through, as to itterate over the 9
 	// potentially surrounding objects. This should help setup a default adjacency list
@@ -121,7 +121,7 @@ int insertSurroundingNum(int x, int y, int size, int itt){
 	return -1;
 }
 
-int main(){
+std::integer main(){
 	
 	const int size = 50;
 	const int tileNum = size * size;

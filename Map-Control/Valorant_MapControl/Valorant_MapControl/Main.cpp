@@ -87,7 +87,7 @@ Mat findingFogPixels(Mat image) {
 
 int main() {
 
-	const int size = 50;
+	const int size = 5;
 	const int tileNum = size * size;
 	int x = 0;
 	int y = 0;
@@ -98,7 +98,7 @@ int main() {
 	//this creates the entire grid of tiles and puts them in a linear array
 	//currently this is very rough and includes tiles that will not be used
 	for (int i = 0; i < tileNum; i++) {
-		tiles[i] = new Tile(x, y, true);
+		tiles[i] = Tile(x, y, true);
 		if (x < size) {
 			x++;
 		}else{
