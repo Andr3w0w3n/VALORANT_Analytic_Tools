@@ -66,6 +66,10 @@ class Tile {
 			}
 		}
 
+		string printTile() {
+
+		}
+
 	private:
 		double control;
 		bool losingCon;
