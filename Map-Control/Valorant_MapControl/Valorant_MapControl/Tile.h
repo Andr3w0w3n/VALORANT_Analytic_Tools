@@ -66,8 +66,8 @@ class Tile {
 			}
 		}
 
-		string printTile() {
-
+		void printTile() {
+			 cout << "Coordinate(" << x << ", " << y << ")\n" << "Control: " << control << "\n";
 		}
 
 	private:

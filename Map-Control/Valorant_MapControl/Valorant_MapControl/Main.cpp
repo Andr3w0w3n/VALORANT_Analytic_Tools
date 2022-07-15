@@ -91,11 +91,13 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 		bool found = false;
 		bool end = false;
 		bool pause = false;
-		//check to see if 
+		//check to see if there are any tiles that will update the og tile
+		
 		if (tiles[i].getControl() == 100.0) {
+			//for(j = )
 			list<int>::iterator object = adj[i].begin();
 			do {
-				if (object == adj[i].end()) {
+				if (object == adj[i].end()) {        
 					end = true;
 				}if (tiles[object].getControl() < 100.0) {
 					found = true;
@@ -137,7 +139,8 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 // This will have to be repeated for any of the adjacency checks
 bool checkXY(int x, int y) {
 
-
+	//stand-in
+	return true;
 
 }
 
@@ -194,9 +197,8 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 			if ((x + 1 != size) && (y + 1 != size)) {
 				return size * (y + 1) + (x + 1);
 			}
-	
-		return -1;
 	}
+	return -1;
 }
 
 int main() {
@@ -212,8 +214,9 @@ int main() {
 	//this creates the entire grid of tiles and puts them in a linear array
 	//currently this is very rough and includes tiles that will not be used
 	for (int i = 0; i < tileNum; i++) {
-		checkXY(x, y);
+		//checkXY(x, y);
 		tiles[i] = Tile(x, y, true);
+		
 		for (int j = 1; j <= 8; j++) {
 			int val = insertSurroundingNum(x, y, size, j);
 			if (val != -1) {
@@ -221,7 +224,7 @@ int main() {
 			}	
 		}
 
-		if (x < size) {
+		if (x < size-1){
 			x++;
 		}
 		else {
@@ -229,6 +232,28 @@ int main() {
 			x = 0;
 		}
 	}
+
+	/////////////TO-DO////////////////
+	//Testing statements
+	/*
+	//WHAT ARE THESE EXTRA TILES????? 
+	// HOW WERE THESE CREATED????
+	// Will probably need to figure out how to not creat these
+	//  or figure out a way to delete them.
+	// infinite??? It broke the write method
+	int total = 1;
+	for (int i = 0; i < sizeof(tiles); i++) {
+		tiles[i].printTile();
+		cout << "" << total << "\n\n";
+		total++;
+	}
+	
+	//this worked fine
+	/*for (int i = 0; i < tileNum; i++) {
+		tiles[i].printTile();
+		cout << "" << total << "\n\n";
+		total++;
+	}*/
 
 
 	return 0;
