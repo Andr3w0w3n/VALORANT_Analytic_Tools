@@ -10,6 +10,9 @@
 using namespace std;
 using namespace cv;
 
+//some more variables
+string path;
+
 Mat findingFogPixels(Mat image) {
 	//this returns a matte of just the fog of war pixels
 
@@ -29,61 +32,32 @@ Mat findingFogPixels(Mat image) {
 
 }
 
-// Image Main, will re-open once the origional array is figured out, as to take the development in steps
-//
-/*int main() {
+Mat drawSquares(int canvasSize, int tileCount, int thickness) {
 
-	//string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-15-47.mp4"; //Test run through ascent
-	string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
+	//
 
-	VideoCapture cap(path);
-	Mat img;
-	Mat imgCont, imgBright;
+	int y1 = 0;
+	int y2 = canvasSize / tileCount;
 
-	while (true) {
+	// Creating a blank image with
+	// white background
+	Mat image(canvasSize, canvasSize, CV_8UC3, Scalar(255, 255, 255));
 
-		cap.read(img);
+	//making a grid of squares 
+	for (int j = 0; j < tileCount; j++) {
+		int x1 = 0;
+		int x2 = canvasSize / tileCount;
+		for (int i = 0; i < tileCount; i++) {
 
-		//Canny(img, imgCanny, 50, 150);
-		
-		//cropped image is (y_Range, x_Range)
-		Mat cropped_image = img(Range(80, 460), Range(60, 420));
-		
-		//attempted splitting the image into RGB to modify but found I could just adjust the brightness and contrast and get a similar result
-		//Mat rgbchannel[3];
-		
-		//lowering the brightness and then raising the contrast 
-		imgBright = cropped_image - Scalar(125, 125, 125); //changing brightness, lowering
-		imgBright.convertTo(imgCont, -1, 1.75, 0); //chaning contrast, raising
+			rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), Scalar(0, 255, 0), thickness, LINE_4);
+			x1 += canvasSize / tileCount;
+			x2 += canvasSize / tileCount;
 
-
-		Mat mattedImage = findingFogPixels(imgCont);
-
-
-		//finding pixel positions
-		// input, binary image
-		Mat locations;   // output, locations of non-zero pixels
-		//findNonZero(mattedImage, locations);
-		// access pixel coordinates
-		//Point pnt = locations.at<Point>(0);
-		//cout << pnt << endl;
-
-		Mat imgCanny;
-		Canny(imgCont, imgCanny, 50, 200);
-
-		imshow("Image Contrasted & Brighted", imgCont);
-		//imshow("Image Brighted", imgBright);
-		imshow("Imaged Matted", mattedImage);
-		imshow("Origional Image (Cropped)", cropped_image);
-		imshow("Edge Detection", imgCanny);
-
-
-		
-		waitKey(1);
+		}
 	}
-	return 0;
 
-}*/
+	return image;
+}
 
 void updateConTiles(list<int> adj[], Tile tiles[]) {
 	//this is where all the tiles will be updated
@@ -99,11 +73,11 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 			do {
 				if (object == adj[i].end()) {        
 					end = true;
-				}if (tiles[object].getControl() < 100.0) {
+				}if (tiles[*object].getControl() < 100.0) {
 					found = true;
 				}
 				else if (!end) {
-					object++;
+					advance(object, 1);
 				}
 			} while (!found && !end);
 
@@ -116,10 +90,10 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 			do {
 				if (object == adj[i].end()) {
 					end = true;
-				}else if(tiles[object].getControl() < tiles[i].getControl()) {
+				}else if(tiles[*object].getControl() < tiles[i].getControl()) {
 					found = true;
 				}else if (!end) {
-					object++;
+					advance(object, 1);
 				}
 			} while (!found && !end);
 			if (!found) {
@@ -135,8 +109,9 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 	}
 }
 
+
+////////TO-DO/////////
 //I forgot what I wanted this to do, maybe check to see if x,y is valid?
-// This will have to be repeated for any of the adjacency checks
 bool checkXY(int x, int y) {
 
 	//stand-in
@@ -203,11 +178,23 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 
 int main() {
 
+	//Variables for tile creation
 	const int size = 5;
 	const int tileNum = size * size;
 	int x = 0;
 	int y = 0;
 	Tile tiles[tileNum];
+
+	//variables for drawing tiles
+	const int tileEdgeThickness = 3;
+	const int canvasSize = 1000;
+
+	//variables for reading the video
+	//string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-15-47.mp4"; //Test run through ascent
+	path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
+	VideoCapture cap(path);
+	Mat img;
+	Mat imgCont, imgBright;
 
 	list<int> adj[tileNum];
 
@@ -233,6 +220,8 @@ int main() {
 		}
 	}
 
+
+
 	/////////////TO-DO////////////////
 	//Testing statements
 	/*
@@ -254,7 +243,61 @@ int main() {
 		cout << "" << total << "\n\n";
 		total++;
 	}*/
+	///////////////////////////////////
 
+	
+	
+	//reading the video portion
+	/*while (true) {
+
+		cap.read(img);
+
+		//Canny(img, imgCanny, 50, 150);
+
+		//cropped image is (y_Range, x_Range)
+		Mat cropped_image = img(Range(80, 460), Range(60, 420));
+
+		//attempted splitting the image into RGB to modify but found I could just adjust the brightness and contrast and get a similar result
+		//Mat rgbchannel[3];
+
+		//lowering the brightness and then raising the contrast 
+		imgBright = cropped_image - Scalar(125, 125, 125); //changing brightness, lowering
+		imgBright.convertTo(imgCont, -1, 1.75, 0); //chaning contrast, raising
+
+
+		Mat mattedImage = findingFogPixels(imgCont);
+
+
+		//finding pixel positions
+		// input, binary image
+		Mat locations;   // output, locations of non-zero pixels
+		//findNonZero(mattedImage, locations);
+		// access pixel coordinates
+		//Point pnt = locations.at<Point>(0);
+		//cout << pnt << endl;
+
+		Mat imgCanny;
+		Canny(imgCont, imgCanny, 50, 200);
+
+		imshow("Image Contrasted & Brighted", imgCont);
+		//imshow("Image Brighted", imgBright);
+		imshow("Imaged Matted", mattedImage);
+		imshow("Origional Image (Cropped)", cropped_image);
+		imshow("Edge Detection", imgCanny);
+
+
+
+		waitKey(1);
+	}
+	*/
+
+	//To be plugged into the reading the video potion to be able to do each frame
+	Mat squares(1000, 1000, CV_8UC3,
+		Scalar(255, 255, 255));
+
+	for (int i = 0; i < 240; i++) {
+		squares = drawSquares(canvasSize, size, tileEdgeThickness);
+	}
 
 	return 0;
 }

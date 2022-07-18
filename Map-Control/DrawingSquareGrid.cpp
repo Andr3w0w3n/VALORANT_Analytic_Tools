@@ -69,7 +69,7 @@ int main(int argc, char** argv){
 	//making a grid of squares 
 	for(int j = 0; j < count; j++){
 		int x1 = 0;
-		int x2 = size/count;
+		int x2 = size/count; 
 		for(int i = 0; i < count; i++){
 				
 			rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), Scalar(0,255,0), thickness, LINE_4);
@@ -94,17 +94,4 @@ int main(int argc, char** argv){
 		}
 	}
 
-}
-
-void Tile(int cNo, int xOne, int xTwo, int yOne, int yTwo, double tValue){
-	
-	int cellNo = cNo;
-	int x1 = xOne;
-	int x2 = xTwo;
-	int y1 = yOne;
-	int y2 = yTwo;
-	//value is the total control of the tile
-	double tileValue = tValue;
-
-	
 }
