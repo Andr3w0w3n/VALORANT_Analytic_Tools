@@ -11,6 +11,7 @@ using namespace std;
 using namespace cv;
 
 //some more variables
+//could save some space and potentially adding 
 string path;
 
 Mat findingFogPixels(Mat image) {
@@ -32,12 +33,11 @@ Mat findingFogPixels(Mat image) {
 
 }
 
-Mat drawSquares(int canvasSize, int tileCount, int thickness) {
+Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 
 	//
 
-	int y1 = 0;
-	int y2 = canvasSize / tileCount;
+	
 
 	// Creating a blank image with
 	// white background
@@ -45,13 +45,16 @@ Mat drawSquares(int canvasSize, int tileCount, int thickness) {
 
 	//making a grid of squares 
 	for (int j = 0; j < tileCount; j++) {
-		int x1 = 0;
-		int x2 = canvasSize / tileCount;
+		
+		int x1 = ;
+		int x2 = canvasSize / (tileCount*tileCount);
+
+		int y1 = 0;
+		int y2 = canvasSize / tileCount;
+
 		for (int i = 0; i < tileCount; i++) {
 
 			rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), Scalar(0, 255, 0), thickness, LINE_4);
-			x1 += canvasSize / tileCount;
-			x2 += canvasSize / tileCount;
 
 		}
 	}
@@ -296,7 +299,7 @@ int main() {
 		Scalar(255, 255, 255));
 
 	for (int i = 0; i < 240; i++) {
-		squares = drawSquares(canvasSize, size, tileEdgeThickness);
+		squares = drawSquares(canvasSize, size, tileEdgeThickness, tiles);
 	}
 
 	return 0;
