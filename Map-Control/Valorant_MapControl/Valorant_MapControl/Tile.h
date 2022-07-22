@@ -31,7 +31,7 @@ class Tile {
 				control = 0.0;
 			}
 			losingCon = false;
-			cout << "A valid tile was created \n";
+			//cout << "A valid tile was created \n";
 		}
 
 		Tile(void) {
@@ -65,6 +65,7 @@ class Tile {
 			if (!losingCon) {
 				return;
 			}
+			control -= 3.0;
 		}
 
 		void printTile() {

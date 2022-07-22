@@ -35,61 +35,89 @@ Mat findingFogPixels(Mat image) {
 
 Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 
-	//
+	cout << "Drawing Squares\n";
 
-	
+	//variables
+	double greyValue = 175.0;
+	Mat image(canvasSize, canvasSize, CV_8UC3, Scalar(255, 255, 255)); //blank white canvas 1000x1000
+	int tileSize = canvasSize / tileCount;
+
+	int y1 = 0;
+	int y2 = tileSize;
 
 	// Creating a blank image with
 	// white background
-	Mat image(canvasSize, canvasSize, CV_8UC3, Scalar(255, 255, 255));
+	
 
 	//making a grid of squares 
-	for (int j = 0; j < tileCount; j++) {
+	for (int i = 0; i < tileCount; i++) {
 		
-		int x1 = ;
-		int x2 = canvasSize / (tileCount*tileCount);
+		int x1 = 0;
+		int x2 = tileSize;
 
-		int y1 = 0;
-		int y2 = canvasSize / tileCount;
+		for (int j = 0; j < tileCount; j++) {
+			int gAndB = int(((100.0 - tiles[i].getControl()) / 100.0) * greyValue);
+			int red = int(((100.0 - tiles[i].getControl()) / 100.0) * (255.0 - greyValue));
 
-		for (int i = 0; i < tileCount; i++) {
+			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(greyValue - gAndB, greyValue - gAndB, greyValue + red), FILLED);
+			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(15, 15, 15), thickness, LINE_4);
 
-			rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), Scalar(0, 255, 0), thickness, LINE_4);
-
+			x1 += tileSize;
+			x2 += tileSize;
 		}
+		
+		y1 += tileSize;
+		y2 += tileSize;
 	}
 
 	return image;
 }
 
-void updateConTiles(list<int> adj[], Tile tiles[]) {
+void updateConTiles(list<int> adj[], Tile tiles[], int tileNum) {
 	//this is where all the tiles will be updated
-	for (int i = 0; i < sizeof(adj); i++) {
+
+	cout << "updating tiles\n";
+
+	for (int i = 0; i < tileNum; i++) {
 		bool found = false;
 		bool end = false;
 		bool pause = false;
 		//check to see if there are any tiles that will update the og tile
 		
 		if (tiles[i].getControl() == 100.0) {
-			//for(j = )
-			list<int>::iterator object = adj[i].begin();
+
+			for (list<int>::iterator j = adj[i].begin(); j != adj[i].end(); ++j) {
+				if (tiles[*j].getControl() < 100.0) {
+					found = true;
+				}
+			}
+
+			/*list<int>::iterator object = adj[i].begin();
 			do {
 				if (object == adj[i].end()) {        
 					end = true;
-				}if (tiles[*object].getControl() < 100.0) {
+				}
+				if (tiles[*object].getControl() < 100.0) {
 					found = true;
 				}
 				else if (!end) {
 					advance(object, 1);
 				}
-			} while (!found && !end);
+			} while (!found && !end);*/
 
 				//if tile is in the middle of lowering control, look to see if it needs to pause
 				// due to no longer being surrounded by non-controlled tiles. This is in hopes
 				// of keeping a "realistic probability" with the tiles if you look away and look back
 		}
 		else if (tiles[i].getControl() < 100.0 && tiles[i].getControl() > 0.0) {
-			list<int>::iterator object = adj[i].begin();
+			
+			for (list<int>::iterator j = adj[i].begin(); j != adj[i].end(); ++j) {
+				if (tiles[*j].getControl() < 100.0) {
+					found = true;
+				}
+			}
+			
+			/*list<int>::iterator object = adj[i].begin();
 			do {
 				if (object == adj[i].end()) {
 					end = true;
@@ -98,7 +126,7 @@ void updateConTiles(list<int> adj[], Tile tiles[]) {
 				}else if (!end) {
 					advance(object, 1);
 				}
-			} while (!found && !end);
+			} while (!found && !end);*/
 			if (!found) {
 				pause = true;
 			}		
@@ -127,9 +155,14 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 	//itt will be the value of whatever is passed through, as to itterate over the 9
 	// potentially surrounding objects. This should help setup a default adjacency list
 	// without the out of map points.
+
+	//Corners are currently excluded to be delt with later
 	switch (itt) {
-		//top left
+			
+			//top left
 		case 1:
+			return -1;
+
 			if ((x - 1 != -1) && (y - 1 != -1)) {
 				return size * (y - 1) + (x - 1);
 			}
@@ -142,6 +175,8 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 
 			//top right
 		case 3:
+			return -1;
+
 			if ((x + 1 != size) && (y - 1 != -1)) {
 				return size * (y - 1) + (x + 1);
 			}
@@ -160,6 +195,8 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 
 			//bottom left
 		case 6:
+			return -1;
+
 			if ((x - 1 != -1) && (y + 1 != size)) {
 				return size * (y + 1) + (x - 1);
 			}
@@ -172,6 +209,8 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 
 			//bottom right
 		case 8:
+			return -1;
+
 			if ((x + 1 != size) && (y + 1 != size)) {
 				return size * (y + 1) + (x + 1);
 			}
@@ -182,11 +221,12 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 int main() {
 
 	//Variables for tile creation
-	const int size = 5;
+	const int size = 10;
 	const int tileNum = size * size;
 	int x = 0;
 	int y = 0;
 	Tile tiles[tileNum];
+	bool controlled = true;
 
 	//variables for drawing tiles
 	const int tileEdgeThickness = 3;
@@ -194,18 +234,23 @@ int main() {
 
 	//variables for reading the video
 	//string path = "C:\\Users\\epica\\Videos\\2022-06-18 22-15-47.mp4"; //Test run through ascent
-	path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
-	VideoCapture cap(path);
+	//path = "C:\\Users\\epica\\Videos\\2022-06-18 22-14-47.mp4"; //Blank Map
+	//VideoCapture cap(path);
 	Mat img;
-	Mat imgCont, imgBright;
+	//Mat imgCont, imgBright;
 
 	list<int> adj[tileNum];
 
 	//this creates the entire grid of tiles and puts them in a linear array
 	//currently this is very rough and includes tiles that will not be used
 	for (int i = 0; i < tileNum; i++) {
+		
+		//this if statement hopefully 
+		if (i == tileNum / 2) {
+			controlled = false;
+		}
 		//checkXY(x, y);
-		tiles[i] = Tile(x, y, true);
+		tiles[i] = Tile(x, y, controlled);
 		
 		for (int j = 1; j <= 8; j++) {
 			int val = insertSurroundingNum(x, y, size, j);
@@ -221,6 +266,8 @@ int main() {
 			y++;
 			x = 0;
 		}
+		
+		//cout << "\nBuilt Tile: " << i+1;
 	}
 
 
@@ -234,7 +281,7 @@ int main() {
 	//  or figure out a way to delete them.
 	// infinite??? It broke the write method
 	int total = 1;
-	for (int i = 0; i < sizeof(tiles); i++) {
+	for (int i = 0; i < sizeof(tiles)/sizeof(tiles[0]); i++) {
 		tiles[i].printTile();
 		cout << "" << total << "\n\n";
 		total++;
@@ -294,13 +341,32 @@ int main() {
 	}
 	*/
 
+	// https://stackoverflow.com/questions/60204868/how-to-write-mp4-video-with-opencv-c
+	//creating the write video
+	string filename = "Test_002";
+	VideoWriter writer;
+	int codec = VideoWriter::fourcc('a', 'v', 'c', '1');
+	double fps = 30.0;
+	Size sizeFrame(1000, 1000);
+	string filepath = "E:\\Users\\epica\\Videos\\ValorantMapControl Tool\\" + filename +".mp4";
+	bool isColor = true;
+	writer.open(filepath, codec, fps, sizeFrame, isColor);
+	cout << "Started writing video... " << endl;
 	//To be plugged into the reading the video potion to be able to do each frame
-	Mat squares(1000, 1000, CV_8UC3,
-		Scalar(255, 255, 255));
+	Mat squares;
+
+
 
 	for (int i = 0; i < 240; i++) {
-		squares = drawSquares(canvasSize, size, tileEdgeThickness, tiles);
+		squares = drawSquares(canvasSize, size, tileEdgeThickness, tiles); 
+		imshow("Edge Detection", squares);
+		//waitKey(0);
+		writer.write(squares);
+		updateConTiles(adj, tiles, tileNum);
+		
 	}
+	cout << "Write complete !" << endl;
+	writer.release();
 
 	return 0;
 }
