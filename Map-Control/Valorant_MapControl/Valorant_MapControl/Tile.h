@@ -35,10 +35,10 @@ class Tile {
 		}
 
 		Tile(void) {
-			cout << "An invalid tile was created \n" << "X: " << x << "\nY: " << y << "\n";
+			//cout << "An invalid tile was created \n" << "X: " << x << "\nY: " << y << "\n";
 			x = -1;
 			y = -1;
-			control = 100.0;
+			control = -1.0;
 			losingCon = false;
 			//cout << "An invalid tile was created \n" << "X: " << x << "\nY: " << y << "\n";
 		}

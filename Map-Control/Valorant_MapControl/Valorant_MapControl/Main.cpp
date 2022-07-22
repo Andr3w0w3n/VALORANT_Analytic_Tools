@@ -38,7 +38,7 @@ Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 	cout << "Drawing Squares\n";
 
 	//variables
-	double greyValue = 175.0;
+	double greyValue = 150.0;
 	Mat image(canvasSize, canvasSize, CV_8UC3, Scalar(255, 255, 255)); //blank white canvas 1000x1000
 	int tileSize = canvasSize / tileCount;
 
@@ -60,6 +60,8 @@ Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 			int red = int(((100.0 - tiles[i].getControl()) / 100.0) * (255.0 - greyValue));
 
 			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(greyValue - gAndB, greyValue - gAndB, greyValue + red), FILLED);
+			cout << "created square with color (B: " << greyValue - gAndB << ", G: " << greyValue - gAndB << ", R: " << greyValue + red << ")\n";
+			cout << "tile control: " << tiles[i].getControl() << endl;
 			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(15, 15, 15), thickness, LINE_4);
 
 			x1 += tileSize;
@@ -92,19 +94,6 @@ void updateConTiles(list<int> adj[], Tile tiles[], int tileNum) {
 				}
 			}
 
-			/*list<int>::iterator object = adj[i].begin();
-			do {
-				if (object == adj[i].end()) {        
-					end = true;
-				}
-				if (tiles[*object].getControl() < 100.0) {
-					found = true;
-				}
-				else if (!end) {
-					advance(object, 1);
-				}
-			} while (!found && !end);*/
-
 				//if tile is in the middle of lowering control, look to see if it needs to pause
 				// due to no longer being surrounded by non-controlled tiles. This is in hopes
 				// of keeping a "realistic probability" with the tiles if you look away and look back
@@ -116,17 +105,6 @@ void updateConTiles(list<int> adj[], Tile tiles[], int tileNum) {
 					found = true;
 				}
 			}
-			
-			/*list<int>::iterator object = adj[i].begin();
-			do {
-				if (object == adj[i].end()) {
-					end = true;
-				}else if(tiles[*object].getControl() < tiles[i].getControl()) {
-					found = true;
-				}else if (!end) {
-					advance(object, 1);
-				}
-			} while (!found && !end);*/
 			if (!found) {
 				pause = true;
 			}		
@@ -246,10 +224,11 @@ int main() {
 	for (int i = 0; i < tileNum; i++) {
 		
 		//this if statement hopefully 
-		if (i == tileNum / 2) {
+		if (i >= size) {
 			controlled = false;
 		}
 		//checkXY(x, y);
+		//cout << "X: " << x << ", Y: " << y << ", Control: " << controlled << endl;
 		tiles[i] = Tile(x, y, controlled);
 		
 		for (int j = 1; j <= 8; j++) {
@@ -258,7 +237,7 @@ int main() {
 				adj[i].push_front(val);
 			}	
 		}
-
+		//cout << tiles[i].getControl() << endl;
 		if (x < size-1){
 			x++;
 		}
@@ -343,7 +322,7 @@ int main() {
 
 	// https://stackoverflow.com/questions/60204868/how-to-write-mp4-video-with-opencv-c
 	//creating the write video
-	string filename = "Test_002";
+	string filename = "Test_003";
 	VideoWriter writer;
 	int codec = VideoWriter::fourcc('a', 'v', 'c', '1');
 	double fps = 30.0;
