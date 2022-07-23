@@ -88,8 +88,8 @@ Tile updateConTiles(list<int> adj[], Tile tiles[], Tile tile, int oneDTileCount)
 	if (tile.getControl() == 100.0) {
 
 		for (list<int>::iterator j = adj[(tile.y * oneDTileCount + tile.x)].begin(); j != adj[(tile.y * oneDTileCount + tile.x)].end(); ++j) {
-			tiles[*j].printTile();
-			if (tiles[*j].getControl() < 100.0) {
+			//tiles[*j].printTile();
+			if (tiles[*j].getControl() < 80.0) {
 				found = true;
 			}
 		}
@@ -101,7 +101,7 @@ Tile updateConTiles(list<int> adj[], Tile tiles[], Tile tile, int oneDTileCount)
 	else if (tile.getControl() < 100.0 && tile.getControl() > 0.0) {
 		
 		for (list<int>::iterator j = adj[(tile.y * oneDTileCount + tile.x)].begin(); j != adj[(tile.y * oneDTileCount + tile.x)].end(); ++j) {
-			tiles[*j].printTile();
+			//tiles[*j].printTile();
 			if (tiles[*j].getControl() < 100.0) {
 				found = true;
 			}
@@ -203,7 +203,7 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 int main() {
 
 	//Variables for tile creation
-	const int size = 5;
+	const int size = 30;
 	const int tileNum = size * size;
 	int x = 0;
 	int y = 0;
@@ -212,7 +212,7 @@ int main() {
 	list<int> adj[tileNum];
 
 	//variables for drawing tiles
-	const int tileEdgeThickness = 3;
+	const int tileEdgeThickness = 1;
 	const int canvasSize = 1000;
 
 	//variables for reading the video
@@ -227,9 +227,9 @@ int main() {
 	//this creates the entire grid of tiles and puts them in a linear array
 	//currently this is very rough and includes tiles that will not be used
 	for (int i = 0; i < tileNum; i++) {
-		
+		controlled = true;
 		//this if statement is just to create some non-controlled squares
-		if (i >= size*(size-1)) {
+		if (95 < rand() % 100) {
 			controlled = false;
 		}
 		//checkXY(x, y);
@@ -313,7 +313,7 @@ int main() {
 
 	// https://stackoverflow.com/questions/60204868/how-to-write-mp4-video-with-opencv-c
 	//creating the write video
-	string filename = "Test_003";
+	string filename = "Test_005";
 	VideoWriter writer;
 	int codec = VideoWriter::fourcc('a', 'v', 'c', '1');
 	double fps = 30.0;

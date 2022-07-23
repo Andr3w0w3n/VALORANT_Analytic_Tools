@@ -65,7 +65,7 @@ class Tile {
 			if (!losingCon) {
 				return;
 			}
-			control -= 3.0;
+			control -= 1.0;
 		}
 
 		void printTile() {
