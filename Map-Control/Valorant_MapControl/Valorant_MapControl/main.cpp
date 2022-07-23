@@ -35,7 +35,7 @@ Mat findingFogPixels(Mat image) {
 
 Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 
-	cout << "Drawing Squares\n";
+	//cout << "Drawing Squares\n";
 
 	//variables
 	double greyValue = 150.0;
@@ -56,18 +56,18 @@ Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 		int x2 = tileSize;
 
 		for (int j = 0; j < tileCount; j++) {
-			int gAndB = int(((100.0 - tiles[i].getControl()) / 100.0) * greyValue);
-			int red = int(((100.0 - tiles[i].getControl()) / 100.0) * (255.0 - greyValue));
+
+			int gAndB = int(((100.0 - tiles[(i*tileCount+j)].getControl()) / 100.0) * greyValue);
+			int red = int(((100.0 - tiles[(i*tileCount+j)].getControl()) / 100.0) * (255.0 - greyValue));
 
 			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(greyValue - gAndB, greyValue - gAndB, greyValue + red), FILLED);
-			cout << "created square with color (B: " << greyValue - gAndB << ", G: " << greyValue - gAndB << ", R: " << greyValue + red << ")\n";
-			cout << "tile control: " << tiles[i].getControl() << endl;
+			//cout << "created square with color (B: " << greyValue - gAndB << ", G: " << greyValue - gAndB << ", R: " << greyValue + red << ")\n";
+			//cout << "tile control: " << tiles[i].getControl() << endl;
 			rectangle(image, Point(x1, y1), Point(x2, y2), Scalar(15, 15, 15), thickness, LINE_4);
 
 			x1 += tileSize;
 			x2 += tileSize;
 		}
-		
 		y1 += tileSize;
 		y2 += tileSize;
 	}
@@ -75,47 +75,51 @@ Mat drawSquares(int canvasSize, int tileCount, int thickness, Tile tiles[]) {
 	return image;
 }
 
-void updateConTiles(list<int> adj[], Tile tiles[], int tileNum) {
+//this may not actually change anything???
+Tile updateConTiles(list<int> adj[], Tile tiles[], Tile tile, int oneDTileCount) {
 	//this is where all the tiles will be updated
 
-	cout << "updating tiles\n";
-
-	for (int i = 0; i < tileNum; i++) {
-		bool found = false;
-		bool end = false;
-		bool pause = false;
-		//check to see if there are any tiles that will update the og tile
+	//cout << "updating tiles\n";
+	bool found = false;
+	bool end = false;
+	bool pause = false;
+	//check to see if there are any tiles that will update the og tile
 		
-		if (tiles[i].getControl() == 100.0) {
+	if (tile.getControl() == 100.0) {
 
-			for (list<int>::iterator j = adj[i].begin(); j != adj[i].end(); ++j) {
-				if (tiles[*j].getControl() < 100.0) {
-					found = true;
-				}
+		for (list<int>::iterator j = adj[(tile.y * oneDTileCount + tile.x)].begin(); j != adj[(tile.y * oneDTileCount + tile.x)].end(); ++j) {
+			tiles[*j].printTile();
+			if (tiles[*j].getControl() < 100.0) {
+				found = true;
 			}
+		}
 
-				//if tile is in the middle of lowering control, look to see if it needs to pause
-				// due to no longer being surrounded by non-controlled tiles. This is in hopes
-				// of keeping a "realistic probability" with the tiles if you look away and look back
-		}
-		else if (tiles[i].getControl() < 100.0 && tiles[i].getControl() > 0.0) {
-			
-			for (list<int>::iterator j = adj[i].begin(); j != adj[i].end(); ++j) {
-				if (tiles[*j].getControl() < 100.0) {
-					found = true;
-				}
-			}
-			if (!found) {
-				pause = true;
-			}		
-		}
-		if (pause && !found) {
-			tiles[i].pauseLosingControl();
-		}
-		else if (found) {
-			tiles[i].beginLosingControl();
-		}
+			//if tile is in the middle of lowering control, look to see if it needs to pause
+			// due to no longer being surrounded by non-controlled tiles. This is in hopes
+			// of keeping a "realistic probability" with the tiles if you look away and look back
 	}
+	else if (tile.getControl() < 100.0 && tile.getControl() > 0.0) {
+		
+		for (list<int>::iterator j = adj[(tile.y * oneDTileCount + tile.x)].begin(); j != adj[(tile.y * oneDTileCount + tile.x)].end(); ++j) {
+			tiles[*j].printTile();
+			if (tiles[*j].getControl() < 100.0) {
+				found = true;
+			}
+		}
+		if (!found) {
+			pause = true;
+		}		
+	}
+	if (pause && !found) {
+		tile.pauseLosingControl();
+	}
+	else if (found) {
+		tile.beginLosingControl();
+	}
+
+	tile.updateCon();
+
+	return tile;
 }
 
 
@@ -199,7 +203,7 @@ int insertSurroundingNum(int x, int y, int size, int itt) {
 int main() {
 
 	//Variables for tile creation
-	const int size = 10;
+	const int size = 5;
 	const int tileNum = size * size;
 	int x = 0;
 	int y = 0;
@@ -224,13 +228,14 @@ int main() {
 	//currently this is very rough and includes tiles that will not be used
 	for (int i = 0; i < tileNum; i++) {
 		
-		//this if statement hopefully 
-		if (i >= size) {
+		//this if statement is just to create some non-controlled squares
+		if (i >= size*(size-1)) {
 			controlled = false;
 		}
 		//checkXY(x, y);
 		//cout << "X: " << x << ", Y: " << y << ", Control: " << controlled << endl;
 		tiles[i] = Tile(x, y, controlled);
+		
 		
 		for (int j = 1; j <= 8; j++) {
 			int val = insertSurroundingNum(x, y, size, j);
@@ -246,7 +251,6 @@ int main() {
 			y++;
 			x = 0;
 		}
-		
 		//cout << "\nBuilt Tile: " << i+1;
 	}
 
@@ -321,18 +325,19 @@ int main() {
 	//To be plugged into the reading the video potion to be able to do each frame
 	Mat squares;
 
-
-
 	for (int i = 0; i < 240; i++) {
-		squares = drawSquares(canvasSize, size, tileEdgeThickness, tiles); 
+		squares = drawSquares(canvasSize, size, tileEdgeThickness, tiles);
 		imshow("Edge Detection", squares);
 		//waitKey(0);
 		writer.write(squares);
-		updateConTiles(adj, tiles, tileNum);
-		
+
+		//Will need to update each tile separately, this will have to be optimized
+		for (int i = 0; i < tileNum; i++) {
+			tiles[i] = updateConTiles(adj, tiles, tiles[i], size);
+		}
 	}
-	cout << "Write complete !" << endl;
 	writer.release();
+	cout << "Write complete !" << endl;
 
 	return 0;
 }

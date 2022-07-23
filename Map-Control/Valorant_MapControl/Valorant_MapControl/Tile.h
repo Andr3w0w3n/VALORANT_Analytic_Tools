@@ -70,14 +70,12 @@ class Tile {
 
 		void printTile() {
 			 cout << "Coordinate(" << x << ", " << y << ")\n" << "Control: " << control << "\n";
+			 cout << "Losing Control: " << losingCon << endl;
 		}
 
 	private:
 		double control;
 		bool losingCon;
-
-
-
 
 };
 
