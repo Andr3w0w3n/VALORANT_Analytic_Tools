@@ -7,12 +7,12 @@
 #include <iterator>
 #include "Tile.h"
 
-using namespace std;
+//using namespace std;
 using namespace cv;
 
 //some more variables
 //could save some space and potentially adding 
-string path;
+std::string path;
 
 Mat findingFogPixels(Mat image) {
 	//this returns a matte of just the fog of war pixels
@@ -282,7 +282,7 @@ int main() {
 	
 	
 	//reading the video portion
-	/*while (true) {
+	while (true) {
 		cap.read(img);
 		//Canny(img, imgCanny, 50, 150);
 		//cropped image is (y_Range, x_Range)
@@ -309,7 +309,6 @@ int main() {
 		imshow("Edge Detection", imgCanny);
 		waitKey(1);
 	}
-	*/
 
 	// https://stackoverflow.com/questions/60204868/how-to-write-mp4-video-with-opencv-c
 	//creating the write video
@@ -338,6 +337,8 @@ int main() {
 	}
 	writer.release();
 	cout << "Write complete !" << endl;
+
+	//delete[] tiles;
 
 	return 0;
 }
